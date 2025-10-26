@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Astha — I'm Sorry</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1: #fff0f3;
+    --bg2: #ffe6e6;
+    --accent: #e63946;
+    --muted: #6b6b6b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:'Poppins',system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;
+    background: linear-gradient(135deg,var(--bg1),var(--bg2));
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:36px;
+    color:#222;
+    overflow:hidden;
+  }
+
+  .card{
+    width:100%;
+    max-width:880px;
+    background: rgba(255,255,255,0.55);
+    border-radius:20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    padding:36px;
+    text-align:center;
+    backdrop-filter: blur(6px);
+    animation: floatIn .9s ease-out;
+  }
+  @keyframes floatIn{
+    from{transform:translateY(18px);opacity:0}
+    to{transform:translateY(0);opacity:1}
+  }
+
+  h1{
+    margin:6px 0 8px;
+    font-size:2.6rem;
+    color:var(--accent);
+    letter-spacing:0.4px;
+  }
+  h2{
+    margin:0;
+    font-size:1.1rem;
+    color:#333;
+    font-weight:600;
+    opacity:0.95;
+  }
+
+  .message{
+    margin-top:22px;
+    font-size:1.15rem;
+    line-height:1.6;
+    color:#2b2b2b;
+    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+    padding:20px;
+    border-radius:12px;
+    border:1px solid rgba(200,30,60,0.04);
+  }
+
+  .heart{
+    font-size:4.2rem;
+    margin-top:18px;
+    display:inline-block;
+    transform-origin:center;
+    animation:beat 1s infinite alternate;
+    filter: drop-shadow(0 6px 14px rgba(230,57,70,0.15));
+  }
+  @keyframes beat{
+    from{transform:scale(1)}
+    to{transform:scale(1.18)}
+  }
+
+  .controls{
+    margin-top:18px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .btn{
+    background:transparent;
+    border:2px solid var(--accent);
+    color:var(--accent);
+    padding:10px 16px;
+    border-radius:999px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .18s ease;
+  }
+  .btn:hover{ transform:translateY(-3px); box-shadow:0 8px 20px rgba(230,57,70,0.08) }
+
+  footer{
+    margin-top:22px;
+    color:var(--muted);
+    font-size:0.92rem;
+  }
+
+  /* floating hearts */
+  .heart-wrap{
+    position:fixed;
+    left:0;right:0;top:0;bottom:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .heart-bubble{
+    position:absolute;
+    font-size:20px;
+    opacity:0.9;
+    animation: rise 6s linear infinite;
+    transform-origin:center;
+    user-select:none;
+  }
+  @keyframes rise{
+    0%{ transform:translateY(40vh) scale(0.6); opacity:0; }
+    10%{ opacity:0.9; }
+    100%{ transform:translateY(-120vh) scale(1.3); opacity:0; }
+  }
+
+  /* small responsive */
+  @media (max-width:520px){
+    h1{font-size:2rem}
+    .card{padding:20px}
+    .message{font-size:1rem}
+  }
+</style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <h2 id="title">For Astha</h2>
+    <h1>I'm Sorry 💔</h1>
+
+    <div class="message" id="msg">
+      Astha i know what i said yesterday was wrong and actually i really love you , i don't know what i am doing but i have created a website for you to prove that i love you, i know that this sounds bulshit and so cringe but yea i guess i am cringe anyways i love you, and yes i love ur smile btw
+    </div>
+
+    <div class="heart" aria-hidden>❤️</div>
+
+    <div class="controls">
+      <!-- Play audio: replace src with an mp3 file URL if you want background music.
+           Example: upload an mp3 to your repo (e.g., /song.mp3) and change the src to "/song.mp3" -->
+      <audio id="bg" preload="none" loop>
+        <!-- <source src="/song.mp3" type="audio/mpeg"> -->
+        Your browser does not support audio.
+      </audio>
+      <button class="btn" id="playBtn">Play song (optional)</button>
+
+      <!-- A small gentle retry / forgive button that triggers a heart burst -->
+      <button class="btn" id="forgiveBtn">Please forgive me 🥺</button>
+    </div>
+
+    <footer>Made with love by <strong>Your Name</strong> for <strong>Astha</strong> 💞</footer>
+  </div>
+
+  <!-- floating hearts container -->
+  <div class="heart-wrap" id="bubbleWrap" aria-hidden></div>
+
+<script>
+  // Play/pause audio
+  const audio = document.getElementById('bg');
+  const playBtn = document.getElementById('playBtn');
+  playBtn.addEventListener('click', ()=>{
+    if(!audio.src){
+      // No audio file specified — open instructions
+      alert('No song found. To add music: upload an MP3 to your repo and replace the <source> src with "/song.mp3" in the HTML, then commit.');
+      return;
+    }
+    if(audio.paused){ audio.play(); playBtn.textContent = 'Pause song'; }
+    else { audio.pause(); playBtn.textContent = 'Play song (optional)'; }
+  });
+
+  // little forgive animation
+  const forgiveBtn = document.getElementById('forgiveBtn');
+  const bubbleWrap = document.getElementById('bubbleWrap');
+  forgiveBtn.addEventListener('click', ()=> {
+    burstHearts(12);
+    // small shake on card
+    const card = document.querySelector('.card');
+    card.animate([{ transform:'translateY(0)' },{ transform:'translateY(-8px)' },{ transform:'translateY(0)' }], { duration:380 });
+  });
+
+  // create floating heart bubbles
+  function burstHearts(count=8){
+    for(let i=0;i<count;i++){
+      const el = document.createElement('div');
+      el.className = 'heart-bubble';
+      el.textContent = '❤️';
+      const size = 12 + Math.random()*36;
+      el.style.fontSize = size + 'px';
+      el.style.left = (10 + Math.random()*80) + '%';
+      el.style.bottom = (-10 - Math.random()*20) + 'vh';
+      el.style.transform = 'translateY(0) scale(' + (0.6 + Math.random()*0.8) + ')';
+      el.style.animationDuration = (4 + Math.random()*6) + 's';
+      bubbleWrap.appendChild(el);
+      // remove after animation
+      setTimeout(()=> el.remove(), 9000);
+    }
+  }
+
+  // gentle continuous hearts (small)
+  setInterval(()=> burstHearts(1 + Math.floor(Math.random()*2)), 1200);
+</script>
+</body>
+</html>
